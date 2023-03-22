@@ -1,62 +1,44 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { contactApi } from './contactSlice';
 import { filterReducer } from './filterSlice';
+import { authReducer } from './auth/slise';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import { contactsReducer } from './contacts/slise';
 
 const rootReduser = combineReducers({
+  contacts: contactsReducer,
   filter: filterReducer,
-  [contactApi.reducerPath]: contactApi.reducer,
+  auth: authReducer,
 });
+
+const persistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['auth'],
+};
+console.log(storage);
+const persitedReducer = persistReducer(persistConfig, rootReduser);
 
 const store = configureStore({
-  reducer: rootReduser,
-  middleware: getDefaultMiddleware => [
-    ...getDefaultMiddleware(),
-    contactApi.middleware,
-  ],
+  reducer: persitedReducer,
+
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+      devTools: process.env.NODE_ENV === 'development',
+    }),
 });
 
+export const persistor = persistStore(store);
 export default store;
-
-// CREATED BY PERSIST
-
-// import { combineReducers, configureStore } from '@reduxjs/toolkit';
-// import { contactsReducer } from './contactsSlice';
-// import { filterReducer } from './filterSlice';
-// import {
-//   persistStore,
-//   persistReducer,
-//   FLUSH,
-//   REHYDRATE,
-//   PAUSE,
-//   PERSIST,
-//   PURGE,
-//   REGISTER,
-// } from 'redux-persist';
-// import storage from 'redux-persist/lib/storage';
-
-// const rootReduser = combineReducers({
-//   contacts: contactsReducer,
-//   filter: filterReducer,
-// });
-
-// const persistConfig = {
-//   key: 'root',
-//   storage,
-//   blacklist: ['filter'],
-// };
-
-// const persitedReducer = persistReducer(persistConfig, rootReduser);
-
-// const store = configureStore({
-//   reducer: persitedReducer,
-
-//   middleware: getDefaultMiddleware =>
-//     getDefaultMiddleware({
-//       serializableCheck: {
-//         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-//       },
-//     }),
-// });
-
-// export const persistor = persistStore(store);
-// export default store;

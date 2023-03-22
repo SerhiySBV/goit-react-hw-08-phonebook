@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
-import {
-  useAddContactMutation,
-  useFetchContactsQuery,
-} from 'redux/contactSlice';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+// import { selectIsLoggedIn } from 'redux/auth/selectors';
+import { addContact, fetchContacts } from 'redux/contacts/operations';
+import { selectAllContacts } from 'redux/contacts/selectors';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const [addContact, { isLoading }] = useAddContactMutation();
-  const { data: contacts } = useFetchContactsQuery();
+  const contacts = useSelector(selectAllContacts);
+  const dispatch = useDispatch();
 
-  const handleSubmit = async event => {
+  console.log('contacts', contacts);
+
+  const handleSubmit = event => {
     event.preventDefault();
     reset();
 
+    contacts &&
     contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())
       ? alert(`${name} is already in contacts`)
-      : await addContact({ name, number });
+      : dispatch(addContact({ name, number }));
   };
 
   const reset = () => {
@@ -39,6 +42,10 @@ const ContactForm = () => {
         return;
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '15px' }}>
@@ -67,9 +74,7 @@ const ContactForm = () => {
         />
       </label>
 
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Adding...' : 'Add contact'}
-      </button>
+      <button type="submit">Add contact</button>
     </form>
   );
 };

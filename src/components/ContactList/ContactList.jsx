@@ -1,12 +1,13 @@
 import ContactItem from 'components/ContactItem/ContactItem';
 import { useSelector } from 'react-redux';
-import { useFetchContactsQuery } from 'redux/contactSlice';
+import { selectAllContacts } from 'redux/contacts/selectors';
 
 export const getFilter = state => state.filter;
 
 const ContactList = () => {
-  const { data: contacts, isFetching } = useFetchContactsQuery();
   const filterValue = useSelector(getFilter);
+  const contacts = useSelector(selectAllContacts);
+
   const getVisibleContacts = () => {
     const normalizedFilter = filterValue.toLocaleLowerCase();
     return filterValue
@@ -15,12 +16,11 @@ const ContactList = () => {
         )
       : contacts;
   };
-  const filteredContact = getVisibleContacts();
+  const filteredContacts = getVisibleContacts();
   return (
     <ul>
-      {isFetching && <h2>Loading...</h2>}
       {contacts &&
-        filteredContact.map(contact => (
+        filteredContacts.map(contact => (
           <li
             key={contact.id}
             style={{
@@ -37,42 +37,3 @@ const ContactList = () => {
 };
 
 export default ContactList;
-
-// CREATED BY HOOK
-
-// import PropTypes from 'prop-types';
-// import ContactItem from 'components/ContactItem/ContactItem';
-
-// const ContactList = ({ contacts, onDeleteContact }) => (
-//   <ul>
-//     {contacts.map(({ id, name, number }) => (
-//       <li
-//         key={id}
-//         style={{
-//           display: 'grid',
-//           gridTemplateColumns: '140px 140px 100px',
-//           alignItems: 'center',
-//         }}
-//       >
-//         <ContactItem
-//           name={name}
-//           number={number}
-//           onDeleteContact={() => onDeleteContact(id)}
-//         />
-//       </li>
-//     ))}
-//   </ul>
-// );
-
-// ContactList.propTypes = {
-//   contacts: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       name: PropTypes.string.isRequired,
-//       number: PropTypes.string.isRequired,
-//       id: PropTypes.string.isRequired,
-//     })
-//   ).isRequired,
-//   onDeleteContact: PropTypes.func.isRequired,
-// };
-
-// export default ContactList;

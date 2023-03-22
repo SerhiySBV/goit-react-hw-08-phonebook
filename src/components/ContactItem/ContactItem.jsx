@@ -1,15 +1,17 @@
-import { useDeleteContactMutation } from 'redux/contactSlice';
+import { useDispatch } from 'react-redux';
+import { deleteContact } from 'redux/contacts/operations';
 import { Delete } from './Contactitem.styled';
 
-const ContactItem = ({ contact: { name, phone, id } }) => {
-  const [deleteContact, { isLoading: isDeliting }] = useDeleteContactMutation();
+const ContactItem = ({ contact: { name, number, id } }) => {
+  const dispatch = useDispatch();
+  const handleDelete = id => {
+    dispatch(deleteContact(id));
+  };
   return (
     <>
       <p>{name} :</p>
-      <p>{phone}</p>
-      <Delete onClick={() => deleteContact(id)} disabled={isDeliting}>
-        {isDeliting ? 'Deliting...' : 'Delete'}
-      </Delete>
+      <p>{number}</p>
+      <Delete onClick={() => handleDelete(id)}>Delete</Delete>
     </>
   );
 };
