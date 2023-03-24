@@ -1,54 +1,58 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { logOut } from 'redux/auth/operations';
-import { fetchContacts, addContact, deleteContact } from './operations';
-
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
+import {
+  fetchContacts,
+  addContact,
+  deleteContact,
+  editContact,
+} from './operations';
+const contactsInitState = [];
+const extraActions = [fetchContacts, addContact, editContact, deleteContact];
+const getActions = type => extraActions.map(action => action[type]);
 const handlePending = state => {
   state.isLoading = true;
 };
-
 const handleRejected = (state, action) => {
   state.isLoading = false;
   state.error = action.payload;
+  toast.error('Something went wrong..');
 };
-
+const handleFulfilled = state => {
+  state.isLoading = false;
+  state.error = null;
+  toast.success('Here we go!');
+};
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState: {
-    items: [],
+    items: contactsInitState,
     isLoading: false,
     error: null,
   },
-  extraReducers: {
-    [fetchContacts.pending]: handlePending,
-    [addContact.pending]: handlePending,
-    [deleteContact.pending]: handlePending,
-    [fetchContacts.rejected]: handleRejected,
-    [addContact.rejected]: handleRejected,
-    [deleteContact.rejected]: handleRejected,
-    [fetchContacts.fulfilled](state, action) {
-      state.isLoading = false;
-      state.error = null;
-      state.items = action.payload;
-    },
-    [addContact.fulfilled](state, action) {
-      state.isLoading = false;
-      state.error = null;
-      state.items.push(action.payload);
-    },
-    [deleteContact.fulfilled](state, action) {
-      state.isLoading = false;
-      state.error = null;
-      const index = state.items.findIndex(
-        contact => contact.id === action.payload.id
-      );
-      state.items.splice(index, 1);
-    },
-    [logOut.fulfilled](state) {
-      state.items = [];
-      state.error = null;
-      state.isLoading = false;
-    },
+
+  extraReducers: builder => {
+    return builder
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.items = action.payload;
+      })
+      .addCase(addContact.fulfilled, (state, action) => {
+        state.items.push(action.payload);
+      })
+      .addCase(deleteContact.fulfilled, (state, action) => {
+        const filtredItems = state.items.filter(
+          item => item.id !== action.payload.id
+        );
+        state.items = filtredItems;
+      })
+      .addCase(editContact.fulfilled, (state, action) => {
+        const index = state.items.findIndex(
+          contact => contact.id === action.payload.id
+        );
+        state.items.splice(index, 1, action.payload);
+      })
+      .addMatcher(isAnyOf(...getActions('pending')), handlePending)
+      .addMatcher(isAnyOf(...getActions('rejected')), handleRejected)
+      .addMatcher(isAnyOf(...getActions('fulfilled')), handleFulfilled);
   },
 });
-
 export const contactsReducer = contactsSlice.reducer;

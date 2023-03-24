@@ -14,24 +14,43 @@ export const RegisterForm = () => {
         password: form.elements.password.value,
       })
     );
-    form.reset();
   };
 
   return (
     <form onSubmit={handleSubmit} autoComplete="off">
       <label>
         Username
-        <input type="text" name="name" />
+        <input
+          id="outlined-basic"
+          label="Name"
+          variant="outlined"
+          type="text"
+          name="name"
+        />
       </label>
       <label>
         Email
-        <input type="email" name="email" />
+        <input
+          id="outlined-basic"
+          label="Email"
+          variant="outlined"
+          type="email"
+          name="email"
+        />
       </label>
       <label>
         Password
-        <input type="password" name="password" />
+        <input
+          id="outlined-basic"
+          label="Password"
+          variant="outlined"
+          type="password"
+          name="password"
+        />
       </label>
-      <button type="submit">Register</button>
+      <button variant="contained" size="large" type="submit">
+        Register
+      </button>
     </form>
   );
 };

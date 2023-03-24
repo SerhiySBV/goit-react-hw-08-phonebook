@@ -1,21 +1,20 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteContact, editContact } from 'redux/contacts/operations';
+import { editContact } from 'redux/contacts/operations';
 import { Delete, Edit } from './Contactitem.styled';
 
 const ContactItem = ({
-  contact: { name: nameValue, number: numberValue, id },
+  name: nameValue,
+  number: numberValue,
+  id,
+  deleteContact,
 }) => {
   const dispatch = useDispatch();
   const [isEdit, setIsEdit] = useState(false);
   const [name, setName] = useState(nameValue);
   const [number, setNumber] = useState(numberValue);
 
-  const handleDelete = id => {
-    dispatch(deleteContact(id));
-  };
   const handleChange = e => {
-    console.log(e.target.name);
     switch (e.target.name) {
       case 'name':
         setName(e.target.value);
@@ -29,10 +28,12 @@ const ContactItem = ({
         return;
     }
   };
+
   const handleCengeMode = () => {
     if (isEdit) {
       setIsEdit(prev => !prev);
-      dispatch(editContact());
+
+      dispatch(editContact({ id, name, number }));
       return;
     }
     setIsEdit(prev => !prev);
@@ -55,54 +56,10 @@ const ContactItem = ({
       ) : (
         <p>{number}</p>
       )}
-      <Edit onClick={handleCengeMode}> {isEdit ? 'Save' : 'Edit'}</Edit>
-      <Delete onClick={() => handleDelete(id)}>Delete</Delete>
+      <Edit onClick={handleCengeMode}>{isEdit ? 'Save' : 'Edit'}</Edit>
+      <Delete onClick={deleteContact}>Delete</Delete>
     </>
   );
 };
 
 export default ContactItem;
-
-//  CREATE BY REDUX
-
-// import { useDispatch } from 'react-redux';
-// import { deleteContact } from 'redux/contactsSlice';
-// import { Delete } from './Contactitem.styled';
-
-// const ContactItem = ({ contact: { name, phone, id } }) => {
-//   const dispatch = useDispatch();
-//   const handleDelete = () => dispatch(deleteContact(id));
-
-//   return (
-//     <>
-//       <p>{name} :</p>
-//       <p>{phone}</p>
-//       <Delete onClick={handleDelete}>Delete</Delete>
-//     </>
-//   );
-// };
-
-// export default ContactItem;
-
-// CREATED BY HOOK
-
-// import PropTypes from 'prop-types';
-// import { Delete } from './Contactitem.styled';
-
-// const ContactItem = ({ name, number, onDeleteContact }) => {
-//   return (
-//     <>
-//       <p>{name} :</p>
-//       <p>{number}</p>
-//       <Delete onClick={onDeleteContact}>Delete</Delete>
-//     </>
-//   );
-// };
-
-// ContactItem.propTypes = {
-//   name: PropTypes.string.isRequired,
-//   number: PropTypes.string.isRequired,
-//   onDeleteContact: PropTypes.func.isRequired,
-// };
-
-// export default ContactItem;

@@ -7,15 +7,24 @@ export const Navigation = () => {
 
   return (
     <nav>
-      <NavLink to="/">Home</NavLink>
-      {isLoggedIn ? (
-        <NavLink to="/contacts">Contacts</NavLink>
-      ) : (
-        <>
-          <NavLink to="/login">Login</NavLink>
-          <NavLink to="/register">Register</NavLink>
-        </>
-      )}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          padding: '20px',
+        }}
+      >
+        <NavLink to="/">Home</NavLink>
+        {isLoggedIn ? (
+          <NavLink to="/contacts">Contacts</NavLink>
+        ) : (
+          <>
+            <NavLink to="/login">Login</NavLink>
+            <NavLink to="/register">Register</NavLink>
+          </>
+        )}
+      </div>
+
       <Suspense>
         <Outlet />
       </Suspense>

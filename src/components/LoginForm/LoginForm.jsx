@@ -13,11 +13,14 @@ export const LoginForm = () => {
         password: form.elements.password.value,
       })
     );
-    form.reset();
+    // form.reset();
   };
 
   return (
-    <form onSubmit={handleSubmit} autoComplete="off">
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: 'flex', justifyContent: 'center' }}
+    >
       <label>
         Email
         <input type="email" name="email" />

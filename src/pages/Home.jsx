@@ -15,7 +15,7 @@ const styles = {
 export default function Home() {
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Contacts manager welcome page </h1>
+      <h1 style={styles.title}>Welcome to contacts manager</h1>
     </div>
   );
 }
