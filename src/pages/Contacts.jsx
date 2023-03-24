@@ -6,11 +6,12 @@ import { selectIsLoggedIn } from 'redux/auth/selectors';
 
 const Contacts = () => {
   return (
-    <div>
+    <div style={{ padding: '15px' }}>
       <header
         style={{
           display: 'flex',
           justifyContent: 'space-between',
+          margin: '30px',
         }}
       >
         <h1>Phonebook</h1>

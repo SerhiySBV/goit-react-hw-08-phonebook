@@ -19,7 +19,7 @@ export const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      style={{ display: 'flex', justifyContent: 'center' }}
+      style={{ display: 'flex', gap: '30px', justifyContent: 'center' }}
     >
       <label>
         Email

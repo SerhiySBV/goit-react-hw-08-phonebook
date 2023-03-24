@@ -46,7 +46,10 @@ const ContactForm = () => {
   }, [dispatch]);
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '15px' }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}
+    >
       <label>
         Name
         <input
