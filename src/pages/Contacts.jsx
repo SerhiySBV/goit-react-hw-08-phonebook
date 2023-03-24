@@ -11,7 +11,7 @@ const Contacts = () => {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          margin: '30px',
+          marginBottom: '30px',
         }}
       >
         <h1>Phonebook</h1>
