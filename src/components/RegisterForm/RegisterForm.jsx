@@ -34,7 +34,7 @@ export const RegisterForm = () => {
             variant="outlined"
             type="text"
             name="name"
-            placeholder="Name Name"
+            placeholder="Name Surname"
           />
         </label>
         <label>
