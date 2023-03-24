@@ -1,38 +1,66 @@
-// import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createSlice } from '@reduxjs/toolkit';
+import {
+  addContact,
+  deleteContact,
+  fetchContacts,
+  editContact,
+} from './contacts/operations';
 
-// export const contactApi = createApi({
-//   reducerPath: 'contactsApi',
-//   baseQuery: fetchBaseQuery({
-//     baseUrl: 'https://connections-api.herokuapp.com/',
-//   }),
-//   tagTypes: ['Contact'],
-//   endpoints: builder => ({
-//     fetchContacts: builder.query({
-//       query: () => `/contacts`,
-//       providesTags: ['Contact'],
-//     }),
-//     addContact: builder.mutation({
-//       query: contactInput => ({
-//         url: '/contacts',
-//         method: 'POST',
-//         body: {
-//           name: contactInput.name,
-//           phone: contactInput.number,
-//         },
-//       }),
-//       invalidatesTags: ['Contact'],
-//     }),
-//     deleteContact: builder.mutation({
-//       query: contactId => ({
-//         url: `/contacts/${contactId}`,
-//         method: 'DELETE',
-//       }),
-//       invalidatesTags: ['Contact'],
-//     }),
-//   }),
-// });
-// export const {
-//   useFetchContactsQuery,
-//   useDeleteContactMutation,
-//   useAddContactMutation,
-// } = contactApi;
+const initialState = {
+  items: [],
+  isLoading: false,
+  error: null,
+};
+
+const handlePending = state => {
+  state.isLoading = true;
+};
+const handleRejected = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+};
+
+const contactsSlice = createSlice({
+  name: 'contacts',
+  initialState,
+
+  extraReducers: {
+    [fetchContacts.pending]: handlePending,
+    [fetchContacts.rejected]: handleRejected,
+    [fetchContacts.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.items = action.payload;
+    },
+    [addContact.pending]: handlePending,
+    [addContact.rejected]: handleRejected,
+    [addContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.items.push(action.payload);
+    },
+    [deleteContact.pending]: handlePending,
+    [deleteContact.rejected]: handleRejected,
+    [deleteContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.items = state.items.filter(
+        contact => contact.id !== action.payload
+      );
+    },
+    [editContact.pending]: handlePending,
+    [editContact.rejected]: handleRejected,
+    [editContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.items = state.items.map(item => {
+        if (item.id === action.payload.id) {
+          return action.payload;
+        }
+        return item;
+      });
+    },
+  },
+});
+
+export const contactReducer = contactsSlice.reducer;

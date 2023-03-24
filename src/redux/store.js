@@ -25,7 +25,6 @@ const persistConfig = {
   storage,
   whitelist: ['auth'],
 };
-console.log(storage);
 const persitedReducer = persistReducer(persistConfig, rootReduser);
 
 const store = configureStore({

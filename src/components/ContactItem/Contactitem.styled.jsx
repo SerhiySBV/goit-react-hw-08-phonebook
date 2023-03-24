@@ -5,3 +5,8 @@ export const Delete = styled.button`
   border-radius: 5px;
   color: lightgray;
 `;
+export const Edit = styled.button`
+  background-color: dimgray;
+  border-radius: 5px;
+  color: lightgray;
+`;

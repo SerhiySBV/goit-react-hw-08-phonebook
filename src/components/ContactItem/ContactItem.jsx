@@ -1,16 +1,61 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteContact } from 'redux/contacts/operations';
-import { Delete } from './Contactitem.styled';
+import { deleteContact, editContact } from 'redux/contacts/operations';
+import { Delete, Edit } from './Contactitem.styled';
 
-const ContactItem = ({ contact: { name, number, id } }) => {
+const ContactItem = ({
+  contact: { name: nameValue, number: numberValue, id },
+}) => {
   const dispatch = useDispatch();
+  const [isEdit, setIsEdit] = useState(false);
+  const [name, setName] = useState(nameValue);
+  const [number, setNumber] = useState(numberValue);
+
   const handleDelete = id => {
     dispatch(deleteContact(id));
   };
+  const handleChange = e => {
+    console.log(e.target.name);
+    switch (e.target.name) {
+      case 'name':
+        setName(e.target.value);
+        return;
+
+      case 'number':
+        setNumber(e.target.value);
+        return;
+
+      default:
+        return;
+    }
+  };
+  const handleCengeMode = () => {
+    if (isEdit) {
+      setIsEdit(prev => !prev);
+      dispatch(editContact());
+      return;
+    }
+    setIsEdit(prev => !prev);
+  };
+
   return (
     <>
-      <p>{name} :</p>
-      <p>{number}</p>
+      {isEdit ? (
+        <input name="name" onChange={handleChange} type="text" value={name} />
+      ) : (
+        <p>{name} :</p>
+      )}
+      {isEdit ? (
+        <input
+          name="number"
+          onChange={handleChange}
+          type="text"
+          value={number}
+        />
+      ) : (
+        <p>{number}</p>
+      )}
+      <Edit onClick={handleCengeMode}> {isEdit ? 'Save' : 'Edit'}</Edit>
       <Delete onClick={() => handleDelete(id)}>Delete</Delete>
     </>
   );

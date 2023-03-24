@@ -25,7 +25,7 @@ const ContactList = () => {
             key={contact.id}
             style={{
               display: 'grid',
-              gridTemplateColumns: '160px 150px 100px',
+              gridTemplateColumns: '160px 150px 100px 100px',
               alignItems: 'center',
             }}
           >
